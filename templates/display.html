@@ -7,15 +7,22 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen flex flex-col">
-    <div id="content-wrapper" class="flex-grow bg-white">
+<body class="min-h-screen">
+    <div id="content-wrapper" class="bg-white">
         <div id="content" class="p-4"></div>
     </div>
-    <div id="feedback" class="bg-gray-100 p-4">
-        <textarea id="feedbackText" rows="2" cols="50" placeholder="Enter feedback" class="border rounded p-2 w-full"></textarea>
-        <div class="mt-2">
-            <button id="submitFeedbackBtn" onclick="submitFeedback()" class="ml-2 bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
-                Submit Feedback
+
+    <!-- Floating feedback toggle button -->
+    <button id="feedbackToggle" class="fixed bottom-4 right-4 bg-blue-500 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:bg-blue-600 focus:outline-none">
+        Feedback
+    </button>
+
+    <!-- Floating feedback area -->
+    <div id="feedback" class="fixed bottom-16 right-4 bg-white p-4 rounded-lg shadow-lg w-1/2 hidden">
+        <textarea id="feedbackText" rows="3" placeholder="Enter feedback" class="border rounded p-2 w-full mb-2"></textarea>
+        <div class="flex justify-between">
+            <button id="submitFeedbackBtn" onclick="submitFeedback()" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                Submit
             </button>
             <button onclick="approvePage()" class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600">
                 Approve
@@ -45,12 +52,10 @@
 
         function updateContent(html) {
             document.getElementById('content').innerHTML = html;
-            // Ensure the feedback textarea is cleared and enabled
             document.getElementById('feedbackText').value = '';
             document.getElementById('feedbackText').disabled = false;
-            // Reset the submit feedback button
             const submitBtn = document.getElementById('submitFeedbackBtn');
-            submitBtn.textContent = 'Submit Feedback';
+            submitBtn.textContent = 'Submit';
             submitBtn.disabled = false;
         }
 
@@ -58,7 +63,6 @@
             const feedback = document.getElementById('feedbackText').value;
             const submitBtn = document.getElementById('submitFeedbackBtn');
             
-            // Disable the button and change text
             submitBtn.disabled = true;
             submitBtn.textContent = 'Working...';
             
@@ -71,9 +75,8 @@
                 .catch(error => {
                     console.error('Error:', error);
                     document.getElementById('feedbackText').disabled = false;
-                    // Reset button on error
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Submit Feedback';
+                    submitBtn.textContent = 'Submit';
                 });
         }
 
@@ -96,6 +99,12 @@
         function closeModal() {
             document.getElementById('codeModal').classList.add('hidden');
         }
+
+        // Toggle feedback area visibility
+        document.getElementById('feedbackToggle').addEventListener('click', function() {
+            const feedbackArea = document.getElementById('feedback');
+            feedbackArea.classList.toggle('hidden');
+        });
 
         loadContent();
     </script>
