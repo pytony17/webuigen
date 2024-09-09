@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Page Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-6 text-center text-gray-800">Web Page Generator</h1>
+        <textarea 
+            id="description" 
+            rows="4" 
+            class="w-full p-2 border rounded mb-4 focus:outline-none focus:ring-2 focus:ring-green-500"
+            placeholder="Enter your web page description"
+        ></textarea>
+        <div class="flex flex-col space-y-4">
+            <button 
+                onclick="generateWebPage()" 
+                class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 transition duration-300"
+            >
+                Generate
+            </button>
+            <div id="result" class="hidden">
+                <a 
+                    href="/display" 
+                    target="_blank"
+                    class="block text-center bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
+                >
+                    View Result
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateWebPage() {
+            const description = document.getElementById('description').value;
+            const generateButton = document.querySelector('button');
+            const resultDiv = document.getElementById('result');
+
+            generateButton.disabled = true;
+            generateButton.textContent = 'Generating...';
+
+            axios.post('/generate', { description: description })
+                .then(response => {
+                    generateButton.disabled = false;
+                    generateButton.textContent = 'Generate';
+                    resultDiv.classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    generateButton.disabled = false;
+                    generateButton.textContent = 'Generate';
+                    alert('An error occurred while generating the web page.');
+                });
+        }
+    </script>
+</body>
+</html>

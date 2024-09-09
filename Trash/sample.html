@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+      <title>Professional Webpage</title>
+    </head>
+    <body class="bg-gray-100">
+  
+      <nav class="flex justify-between items-center bg-blue-600 p-4">
+        <div class="ml-5">
+          <a href="#" class="text-white text-lg">Home</a>
+        </div>
+        <div class="flex space-x-4 mr-5">
+          <a href="#" class="text-white">About Us</a>
+          <a href="#" class="text-white">Our Services</a>
+          <a href="#" class="text-white">Contact Us</a>
+        </div>
+      </nav>
+  
+      <div class="flex mt-5">
+        <div class="w-1/4 bg-white p-5 shadow-md">
+          <h3 class="text-xl font-semibold">Left Pane</h3>
+          <p class="mt-2">This is some text in the left pane.</p>
+        </div>
+        <div class="w-3/4 bg-white p-5 shadow-md ml-5">
+          <div class="chat-history h-64 overflow-y-auto border border-gray-300 p-2 mb-2">
+            <div class="human-response mb-2">Human: Hello!</div>
+            <div class="ai-response mb-2">AI: Hi there! How can I help you?</div>
+          </div>
+          <div class="flex">
+            <input type="text" class="flex-1 border border-gray-300 p-2" placeholder="Type your question here...">
+            <button class="bg-blue-600 text-white p-2 ml-2">Send</button>
+          </div>
+        </div>
+      </div>
+  
+    </body>
+    </html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Web Page</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen flex flex-col">
+    <div id="content-wrapper" class="flex-grow bg-white">
+        <div id="content" class="p-4"></div>
+    </div>
+    <div id="feedback" class="bg-gray-100 p-4">
+        <textarea id="feedbackText" rows="2" cols="50" placeholder="Enter feedback" class="border rounded p-2 w-full"></textarea>
+        <div class="mt-2">
+            <button id="submitFeedbackBtn" onclick="submitFeedback()" class="ml-2 bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                Submit Feedback
+            </button>
+            <button onclick="approvePage()" class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600">
+                Approve
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal for displaying the final code -->
+    <div id="codeModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white p-4 rounded-lg max-w-2xl w-full">
+            <h2 class="text-xl font-bold mb-2">Approved HTML/CSS Code</h2>
+            <pre id="finalCode" class="bg-gray-100 p-4 rounded overflow-auto max-h-96"></pre>
+            <button onclick="closeModal()" class="mt-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function loadContent() {
+            axios.get('/generate')
+                .then(response => {
+                    updateContent(response.data.html);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function updateContent(html) {
+            document.getElementById('content').innerHTML = html;
+            // Ensure the feedback textarea is cleared and enabled
+            document.getElementById('feedbackText').value = '';
+            document.getElementById('feedbackText').disabled = false;
+            // Reset the submit feedback button
+            const submitBtn = document.getElementById('submitFeedbackBtn');
+            submitBtn.textContent = 'Submit Feedback';
+            submitBtn.disabled = false;
+        }
+
+        function submitFeedback() {
+            const feedback = document.getElementById('feedbackText').value;
+            const submitBtn = document.getElementById('submitFeedbackBtn');
+            
+            // Disable the button and change text
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Working...';
+            
+            document.getElementById('feedbackText').disabled = true;
+            
+            axios.post('/feedback', { feedback: feedback })
+                .then(response => {
+                    updateContent(response.data.html);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('feedbackText').disabled = false;
+                    // Reset button on error
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Feedback';
+                });
+        }
+
+        function approvePage() {
+            axios.post('/feedback', { feedback: 'APPROVED' })
+                .then(response => {
+                    alert(response.data.message);
+                    if (response.data.approved) {
+                        showFinalCode(response.data.html);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function showFinalCode(code) {
+            document.getElementById('finalCode').textContent = code;
+            document.getElementById('codeModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('codeModal').classList.add('hidden');
+        }
+
+        loadContent();
+    </script>
+</body>
+</html>
